@@ -1,16 +1,12 @@
-#ifndef __STRUCT__
-#define __STRUCT__
+#ifndef __MATRIX__
+#define __MATRIX__
 
 #include <stdio.h>
 #include <stdlib.h>
 
 #include "code_status.h"
 #include "get_number.h"
-
-typedef struct _line {
-    unsigned int n;
-    int* arr;
-} Line;
+#include "line.h"
 
 typedef struct _matrix {
     unsigned int m;
@@ -19,7 +15,6 @@ typedef struct _matrix {
 
 //return BAD_ALLOC or EOF or OK
 int get_matrix(Matrix* matrix);
-
 void dealloc_matrix(Matrix* matrix, unsigned int m);
 void print_matrix(Matrix* matrix);
 
