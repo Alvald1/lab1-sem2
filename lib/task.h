@@ -6,6 +6,6 @@
 #include "code_status.h"
 #include "struct.h"
 
-int task(Matrix* matrix, Matrix* result);
+int task(Matrix* matrix, Matrix** result);
 
 #endif

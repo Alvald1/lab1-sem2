@@ -12,10 +12,10 @@ main() {
         case BAD_ALLOC: printf("BAD_ALLOC"); return 0;
         case EOF: return 0;
     }
-    printf("Исходная матрица\n");
+    printf("\nИсходная матрица\n");
     print_matrix(&matrix);
-    printf("\n\nРезультат\n");
-    if (task(&matrix, result) == BAD_ALLOC) {
+    printf("\nРезультат\n");
+    if (task(&matrix, &result) == BAD_ALLOC) {
         dealloc_matrix(&matrix, matrix.m);
         dealloc_matrix(result, result->m);
         free(result);
