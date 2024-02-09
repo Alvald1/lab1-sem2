@@ -4,26 +4,21 @@ int memcopy(Line* dest, const Line* src, int n);
 size_t find_max_ind(const Line* arr);
 
 int
-task(const Matrix* matrix, Matrix** result) {
+task(const Matrix* matrix, Matrix* result) {
     void* tmp = NULL;
     size_t max_ind = 0;
-    tmp = (Matrix*)malloc(sizeof(Matrix));
-    if (tmp == NULL) {
-        return BAD_ALLOC;
-    }
-    *result = tmp;
     tmp = (Line*)malloc(matrix->m * (sizeof(Line)));
     if (tmp == NULL) {
-        free(*result);
+        free(result);
         return BAD_ALLOC;
     }
-    (*result)->m = matrix->m;
-    (*result)->lines = tmp;
+    result->m = matrix->m;
+    result->lines = tmp;
     for (size_t i = 0; i < matrix->m; ++i) {
         max_ind = find_max_ind((matrix->lines) + i);
-        if (memcopy(((*result)->lines) + i, (matrix->lines) + i, max_ind + 1) == BAD_ALLOC) {
-            dealloc_matrix((*result), i);
-            free(*result);
+        if (memcopy((result->lines) + i, (matrix->lines) + i, max_ind + 1) == BAD_ALLOC) {
+            dealloc_matrix(result, i);
+            free(result);
             return BAD_ALLOC;
         }
     }
