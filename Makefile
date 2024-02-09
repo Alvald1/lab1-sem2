@@ -36,7 +36,7 @@ formating:
 	clang-format *.c -i -style=file
 
 clean:
-	rm -rf $(EXECUTABLE)* *plist
+	rm -rf $(EXECUTABLE)* *plist *.o
 
 help:
 	@echo "Available targets:"
