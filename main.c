@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#include "lib/struct.h"
+#include "lib/matrix.h"
 #include "lib/task.h"
 
 int

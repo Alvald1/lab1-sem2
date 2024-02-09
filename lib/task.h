@@ -4,7 +4,7 @@
 #include <stdlib.h>
 
 #include "code_status.h"
-#include "struct.h"
+#include "matrix.h"
 
 int task(Matrix* matrix, Matrix** result);
 
