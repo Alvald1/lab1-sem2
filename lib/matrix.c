@@ -7,17 +7,15 @@
 
 int
 init_matrix(Matrix* matrix, unsigned int m) {
-    matrix->m = m;
-    void* tmp = NULL;
     Line* lines = NULL;
-    tmp = (Line*)malloc(m * sizeof(Line));
-    if (tmp == NULL) {
+    lines = (Line*)malloc(m * sizeof(Line));
+    if (lines == NULL) {
         return BAD_ALLOC;
     }
-    lines = tmp;
     for (size_t i = 0; i < m; ++i) {
         init_line(lines + i);
     }
+    matrix->m = m;
     matrix->lines = lines;
     return OK;
 }
@@ -34,7 +32,7 @@ get_matrix(Matrix* matrix) {
         return BAD_ALLOC;
     }
     for (size_t i = 0; i < m; ++i) {
-        switch (get_line((matrix->lines) + i)) {
+        switch (get_line(matrix->lines + i)) {
             case EOF: dealloc_matrix(matrix, i); return EOF;
             case BAD_ALLOC: dealloc_matrix(matrix, i); return BAD_ALLOC;
         }
@@ -45,7 +43,7 @@ get_matrix(Matrix* matrix) {
 void
 dealloc_matrix(const Matrix* matrix, unsigned int m) {
     for (size_t i = 0; i < m; ++i) {
-        dealloc_line(((matrix->lines) + i));
+        dealloc_line(matrix->lines + i);
     }
     free(matrix->lines);
 }
@@ -53,7 +51,7 @@ dealloc_matrix(const Matrix* matrix, unsigned int m) {
 void
 print_matrix(const Matrix* matrix) {
     for (size_t i = 0; i < matrix->m; ++i) {
-        print_line((matrix->lines) + i);
+        print_line(matrix->lines + i);
         printf("\n");
     }
 }
