@@ -19,13 +19,6 @@ get_signed_int(int* number) {
 }
 
 int
-get_unsigned_int(int* number) {
-    *number = 0;
-    int call_back = get_number("%d", number);
-    while (!(call_back) || *number < 0) {
-        scanf("%*[^\n]");
-        printf("Некорректный ввод\n");
-        call_back = get_number("%d", number);
-    }
-    return call_back;
+get_unsigned_int(unsigned int* number) {
+    return get_number("%u", number);
 }

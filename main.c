@@ -1,18 +1,14 @@
-#include <stdio.h>
-
 #include "lib/get_number.h"
 #include "lib/struct.h"
 
 int
 main() {
-    unsigned int m = 0;
-    void* tmp = NULL;
     Matrix matrix;
-    printf("Введите количество строк: ");
-    if (get_unsigned_int(&m) == EOF) {
-        return 0;
+    switch (get_matrix(&matrix)) {
+        case BAD_ALLOC: printf("BAD_ALLOC\n"); return 0;
+        case EOF: return 0;
     }
-    init_matrix(&matrix, m);
-
+    print_matrix(&matrix);
+    dealloc_matrix(&matrix, matrix.m);
     return 0;
 }

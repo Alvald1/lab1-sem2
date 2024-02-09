@@ -8,18 +8,20 @@
 
 enum { OK, BAD_ALLOC };
 
-typedef struct _matrix {
-    unsigned int m;
-    Line** lines;
-} Matrix;
-
 typedef struct _line {
     unsigned int n;
     int* arr;
 } Line;
 
-void init_matrix(Matrix* matrix, unsigned int m);
-void init_line(Line* line);
-void get_line(Line* line);
+typedef struct _matrix {
+    unsigned int m;
+    Line* lines;
+} Matrix;
+
+//return BAD_ALLOC or EOF or OK
+int get_matrix(Matrix* matrix);
+
+void dealloc_matrix(Matrix* matrix, unsigned int m);
+void print_matrix(Matrix* matrix);
 
 #endif
