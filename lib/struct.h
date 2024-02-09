@@ -4,9 +4,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "code_status.h"
 #include "get_number.h"
-
-enum { OK, BAD_ALLOC };
 
 typedef struct _line {
     unsigned int n;

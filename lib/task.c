@@ -1,0 +1,55 @@
+#include "task.h"
+
+int memcopy(Line* dest, Line* src, size_t n);
+size_t find_max_ind(Line* arr);
+
+int
+task(Matrix* matrix, Matrix* result) {
+    result = NULL;
+    void* tmp = NULL;
+    size_t max_ind = 0;
+    tmp = (Matrix*)malloc(sizeof(Matrix));
+    if (tmp == NULL) {
+        return BAD_ALLOC;
+    }
+    result = tmp;
+    tmp = (Line*)malloc(matrix->m * (sizeof(Line)));
+    if (tmp == NULL) {
+        free(result);
+        return BAD_ALLOC;
+    }
+    result->lines = tmp;
+    for (size_t i = 0; i < matrix->m; ++i) {
+        max_ind = find_max_ind((matrix->lines) + i);
+        if (memcopy((result->lines) + i, (matrix->lines) + i, max_ind) == BAD_ALLOC) {
+            dealloc_matrix(result, i);
+        }
+    }
+    return OK;
+}
+
+int
+memcopy(Line* dest, Line* src, size_t n) {
+    void* tmp = NULL;
+    tmp = (int*)malloc(n * (sizeof(int)));
+    if (tmp == NULL) {
+        return BAD_ALLOC;
+    }
+    dest->arr = tmp;
+    dest->n = n;
+    while (n--) {
+        *(dest->arr)++ = *(src->arr)++;
+    }
+    return OK;
+}
+
+size_t
+find_max_ind(Line* line) {
+    size_t max_ind = 0;
+    for (size_t i = 1; i < line->n; ++i) {
+        if (*((line->arr) + i) > *((line->arr) + max_ind)) {
+            max_ind = i;
+        }
+    }
+    return max_ind;
+}
