@@ -14,7 +14,12 @@ get_number(const char* format, void* number) {
 }
 
 int
-get_number_int(int* number) {
+get_signed_int(int* number) {
+    return get_number("%d", number);
+}
+
+int
+get_unsigned_int(int* number) {
     *number = 0;
     int call_back = get_number("%d", number);
     while (!(call_back) || *number < 0) {

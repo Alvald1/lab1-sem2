@@ -5,11 +5,11 @@
 
 int
 main() {
-    int m = 0;
+    unsigned int m = 0;
     void* tmp = NULL;
     Matrix matrix;
     printf("Введите количество строк: ");
-    if (get_number_int(&m) == EOF) {
+    if (get_unsigned_int(&m) == EOF) {
         return 0;
     }
     init_matrix(&matrix, m);
