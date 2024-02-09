@@ -1,3 +1,7 @@
+#include <stdlib.h>
+
+#include "code_status.h"
+#include "matrix.h"
 #include "task.h"
 
 int memcopy(Line* dest, const Line* src, int n);
@@ -7,7 +11,7 @@ int
 task(const Matrix* matrix, Matrix* result) {
     void* tmp = NULL;
     size_t max_ind = 0;
-    tmp = (Line*)malloc(matrix->m * (sizeof(Line)));
+    tmp = (Line*)malloc(matrix->m * sizeof(Line));
     if (tmp == NULL) {
         free(result);
         return BAD_ALLOC;

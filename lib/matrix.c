@@ -1,3 +1,8 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#include "code_status.h"
+#include "get_number.h"
 #include "matrix.h"
 
 int
@@ -5,7 +10,7 @@ init_matrix(Matrix* matrix, unsigned int m) {
     matrix->m = m;
     void* tmp = NULL;
     Line* lines = NULL;
-    tmp = (Line*)malloc(m * (sizeof(Line)));
+    tmp = (Line*)malloc(m * sizeof(Line));
     if (tmp == NULL) {
         return BAD_ALLOC;
     }
@@ -38,7 +43,7 @@ get_matrix(Matrix* matrix) {
 }
 
 void
-dealloc_matrix(Matrix* matrix, unsigned int m) {
+dealloc_matrix(const Matrix* matrix, unsigned int m) {
     for (size_t i = 0; i < m; ++i) {
         dealloc_line(((matrix->lines) + i));
     }

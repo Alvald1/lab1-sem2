@@ -1,5 +1,6 @@
 #include <stdio.h>
 
+#include "lib/code_status.h"
 #include "lib/matrix.h"
 #include "lib/task.h"
 

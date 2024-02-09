@@ -1,4 +1,9 @@
 #include "line.h"
+#include "code_status.h"
+#include "get_number.h"
+
+#include <stdio.h>
+#include <stdlib.h>
 
 void
 init_line(Line* line) {
@@ -16,7 +21,7 @@ get_line(Line* line) {
     if (get_unsigned_int(&n) == EOF) {
         return EOF;
     }
-    tmp = (int*)malloc(n * (sizeof(int)));
+    tmp = (int*)malloc(n * sizeof(int));
     if (tmp == NULL) {
         return BAD_ALLOC;
     }
@@ -35,7 +40,7 @@ get_line(Line* line) {
 }
 
 void
-dealloc_line(Line* line) {
+dealloc_line(const Line* line) {
     free(line->arr);
 }
 
