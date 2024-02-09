@@ -5,7 +5,6 @@ size_t find_max_ind(Line* arr);
 
 int
 task(Matrix* matrix, Matrix** result) {
-    *result = NULL;
     void* tmp = NULL;
     size_t max_ind = 0;
     tmp = (Matrix*)malloc(sizeof(Matrix));
@@ -24,6 +23,8 @@ task(Matrix* matrix, Matrix** result) {
         max_ind = find_max_ind((matrix->lines) + i);
         if (memcopy(((*result)->lines) + i, (matrix->lines) + i, max_ind + 1) == BAD_ALLOC) {
             dealloc_matrix((*result), i);
+            free(*result);
+            return BAD_ALLOC;
         }
     }
     return OK;

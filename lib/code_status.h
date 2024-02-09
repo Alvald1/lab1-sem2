@@ -3,6 +3,6 @@
 
 #include <stdio.h>
 
-enum { OK, BAD_ALLOC, BAD_INDEX };
+enum { OK, BAD_ALLOC };
 
 #endif
