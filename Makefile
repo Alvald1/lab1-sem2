@@ -13,24 +13,24 @@ all: compile
 
 compile: 
 	cc -c *.c $(CFLAGS) $(LDFLAGS) $(OPTIM)
-	#cc -c $(LIB_DIR)/*.c $(CFLAGS) $(LDFLAGS) $(OPTIM)
+	cc -c $(LIB_DIR)/*.c $(CFLAGS) $(LDFLAGS) $(OPTIM)
 	cc *.o $(CFLAGS) -o $(EXECUTABLE)_clean $(LDFLAGS) $(OPTIM)
 	rm *.o
 
 debug: 
 	cc -c -g *.c $(LDFLAGS) $(OPTIM)
-	#cc -c -g $(LIB_DIR)/*.c $(LDFLAGS) $(OPTIM)
+	cc -c -g $(LIB_DIR)/*.c $(LDFLAGS) $(OPTIM)
 	cc *.o -o $(EXECUTABLE)_debug $(LDFLAGS) $(OPTIM)
 	rm *.o
 
 asan: 
 	clang -c *.c $(CFLAGS) $(ASAN) $(OPTIM)
-	#clang -c $(LIB_DIR)/*.c $(CFLAGS) $(ASAN) $(OPTIM)
+	clang -c $(LIB_DIR)/*.c $(CFLAGS) $(ASAN) $(OPTIM)
 	clang *.o $(CFLAGS) $(ASAN) -o $(EXECUTABLE)_asan $(LDFLAGS) $(OPTIM)
 	rm *.o
 
 static: 
-	clang --analyze -Xanalyzer -analyzer-output=html *.c #$(LIB_DIR)/*.c
+	clang --analyze -Xanalyzer -analyzer-output=html *.c $(LIB_DIR)/*.c
 
 formating:
 	clang-format *.c -i -style=file
