@@ -16,6 +16,6 @@ void init_line(Line* line);
 //return BAD_ALLOC or EOF or OK
 int get_line(Line* line);
 void dealloc_line(Line* line);
-void print_line(Line* line);
+void print_line(const Line* line);
 
 #endif

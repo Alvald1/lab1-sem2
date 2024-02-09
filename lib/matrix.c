@@ -46,7 +46,7 @@ dealloc_matrix(Matrix* matrix, unsigned int m) {
 }
 
 void
-print_matrix(Matrix* matrix) {
+print_matrix(const Matrix* matrix) {
     for (size_t i = 0; i < matrix->m; ++i) {
         print_line((matrix->lines) + i);
         printf("\n");

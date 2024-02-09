@@ -40,7 +40,7 @@ dealloc_line(Line* line) {
 }
 
 void
-print_line(Line* line) {
+print_line(const Line* line) {
     for (size_t i = 0; i < line->n; ++i) {
         printf("%d ", *((line->arr) + i));
     }

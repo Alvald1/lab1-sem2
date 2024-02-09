@@ -1,10 +1,10 @@
 #include "task.h"
 
-int memcopy(Line* dest, Line* src, int n);
-size_t find_max_ind(Line* arr);
+int memcopy(Line* dest, const Line* src, int n);
+size_t find_max_ind(const Line* arr);
 
 int
-task(Matrix* matrix, Matrix** result) {
+task(const Matrix* matrix, Matrix** result) {
     void* tmp = NULL;
     size_t max_ind = 0;
     tmp = (Matrix*)malloc(sizeof(Matrix));
@@ -31,7 +31,7 @@ task(Matrix* matrix, Matrix** result) {
 }
 
 int
-memcopy(Line* dest, Line* src, int n) {
+memcopy(Line* dest, const Line* src, int n) {
     void* tmp = NULL;
     tmp = (int*)malloc(n * (sizeof(int)));
     if (tmp == NULL) {
@@ -47,7 +47,7 @@ memcopy(Line* dest, Line* src, int n) {
 }
 
 size_t
-find_max_ind(Line* line) {
+find_max_ind(const Line* line) {
     size_t max_ind = line->n > 0 ? 0 : -1;
     for (size_t i = 1; i < line->n; ++i) {
         if (*((line->arr) + i) >= *((line->arr) + max_ind)) {

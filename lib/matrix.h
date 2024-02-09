@@ -16,6 +16,6 @@ typedef struct _matrix {
 //return BAD_ALLOC or EOF or OK
 int get_matrix(Matrix* matrix);
 void dealloc_matrix(Matrix* matrix, unsigned int m);
-void print_matrix(Matrix* matrix);
+void print_matrix(const Matrix* matrix);
 
 #endif
