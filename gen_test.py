@@ -10,6 +10,6 @@ def save_numbers_to_file(numbers, filename):
             file.write(str(number) + '\n')
 
 if __name__ == "__main__":
-    random_numbers = generate_random_numbers(1_000_000, -100, 100)
-    save_numbers_to_file(random_numbers, 'test_1_000_000.txt')
-    print(f"Случайные числа сохранены в файл test_1_000_000.txt")
+    random_numbers = generate_random_numbers(50_000_000, -100, 100)
+    save_numbers_to_file(random_numbers, 'test_50_000_000.txt')
+    print(f"Случайные числа сохранены в файл test_50_000_000.txt")
