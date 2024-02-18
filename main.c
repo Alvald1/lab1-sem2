@@ -20,7 +20,7 @@ int read_line(Line* line, size_t* offset, FILE* file);
 int init_matrix(Matrix* matrix, size_t cnt_lines);
 void dealloc_matrix(const Matrix* matrix);
 int print_matrix(const Matrix* matrix);
-void print_line(const Line* line, const FILE* file);
+void print_line(const Line* line, FILE* file);
 
 int
 main() {
@@ -32,24 +32,37 @@ main() {
             printf("\nBAD_ALLOC");
             return 0;
     }
+    if (print_matrix(&matrix) == BAD_FILE) {
+        printf("\nBAD_FILE");
+        dealloc_matrix(&matrix);
+        return 0;
+    }
     dealloc_matrix(&matrix);
-
     return 0;
 }
 
 void
-print_line(const Line* line, const FILE* file) {
-    fseek(file, line->offset, SEEK_SET);
-    for (size_t i = 0; i < line->cnt_numbers; ++i) {}
+print_line(const Line* line, FILE* file) {
+    int number = 0;
+    fseek(file, (line->offset) * sizeof(int), SEEK_SET);
+    for (size_t i = 0; i < line->cnt_numbers; ++i) {
+        fread(&number, sizeof(int), 1, file);
+        printf("%d ", number);
+    }
 }
 
 int
 print_matrix(const Matrix* matrix) {
     FILE* file = fopen(matrix->file_name, "rb");
+    fseek(file, 0L, SEEK_SET);
     if (file == NULL) {
         return BAD_FILE;
     }
-    for (size_t i = 0; i < matrix->cnt_lines; ++i) {}
+    for (size_t i = 0; i < matrix->cnt_lines; ++i) {
+        print_line(matrix->lines + i, file);
+        printf("\n");
+    }
+    return OK;
 }
 
 void
