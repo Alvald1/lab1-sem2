@@ -7,7 +7,7 @@ EXECUTABLE = bin
 
 OPTIM = -O0
 
-LDFLAGS = 
+LDFLAGS = -lreadline 
 
 all: compile
 

@@ -19,13 +19,13 @@ get_signed_int(int* number) {
 }
 
 int
-get_unsigned_int(unsigned int* number) {
-    int tmp = 0;
-    int call_back = get_number("%d", &tmp);
+get_unsigned_int(size_t* number) {
+    long long int tmp = 0;
+    int call_back = get_number("%Ld", &tmp);
     while (call_back != EOF && (!(call_back) || tmp < 0)) {
         scanf("%*[^\n]");
         printf("Некорректный ввод\n");
-        call_back = get_number("%d", &tmp);
+        call_back = get_number("%Ld", &tmp);
     }
     *number = tmp;
     return call_back;
