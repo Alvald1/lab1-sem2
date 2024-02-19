@@ -1,15 +1,15 @@
-#ifndef __LINE_MY__
-#define __LINE_MY__
+#ifndef __LINE_LIB__
+#define __LINE_LIB__
+
+#include <stdio.h>
 
 typedef struct _line {
-    unsigned int n;
-    int* arr;
+    size_t cnt_numbers;
+    size_t offset;
 } Line;
 
-void init_line(Line* line);
-//return BAD_ALLOC or EOF or OK
-int get_line(Line* line);
-void dealloc_line(const Line* line);
-void print_line(const Line* line);
+int read_line(Line* line, size_t* offset, FILE* file);
+int print_line(const Line* line, FILE* file);
+int read_line_file(Line* line, size_t* offset, FILE* file);
 
 #endif

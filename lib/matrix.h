@@ -4,15 +4,16 @@
 #include "line.h"
 
 typedef struct _matrix {
-    unsigned int m;
+    size_t cnt_lines;
+    char* file_name;
     Line* lines;
 } Matrix;
 
-//return BAD_ALLOC or OK
-int init_matrix(Matrix* matrix, unsigned int m);
-//return BAD_ALLOC or EOF or OK
-int get_matrix(Matrix* matrix);
-void dealloc_matrix(const Matrix* matrix, unsigned int m);
-void print_matrix(const Matrix* matrix);
+typedef int (*fptr_read_line)(Line* line, size_t* offset, FILE* file);
+
+int read_matrix(Matrix* matrix, char flag);
+int init_matrix(Matrix* matrix, char flag, FILE** file);
+void dealloc_matrix(const Matrix* matrix);
+int print_matrix(const Matrix* matrix);
 
 #endif

@@ -2,49 +2,54 @@
 #include "code_status.h"
 #include "get_number.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-
-void
-init_line(Line* line) {
-    line->n = 0;
-    line->arr = NULL;
-}
-
 int
-get_line(Line* line) {
-    unsigned int n = 0;
-    int* arr = NULL;
-    int number = 0;
-    printf("Введите длину строки: ");
-    if (get_unsigned_int(&n) == EOF) {
-        return EOF;
+read_line_file(Line* line, size_t* offset, FILE* file) {
+    if (fread(&(line->cnt_numbers), sizeof(size_t), 1, file) < 1) {
+        return BAD_FILE;
     }
-    arr = (int*)malloc(n * sizeof(int));
-    if (arr == NULL) {
-        return BAD_ALLOC;
-    }
-    for (size_t i = 0; i < n; ++i) {
-        printf("Введите число: ");
-        if (get_signed_int(&number) == EOF) {
-            free(arr);
-            return EOF;
-        }
-        *(arr + i) = number;
-    }
-    line->n = n;
-    line->arr = arr;
+    *(offset) += sizeof(size_t);
+    line->offset = *offset;
+    *(offset) += (line->cnt_numbers) * sizeof(int);
+    fseek(file, (line->cnt_numbers) * sizeof(int), SEEK_CUR);
     return OK;
 }
 
-void
-dealloc_line(const Line* line) {
-    free(line->arr);
+int
+print_line(const Line* line, FILE* file) {
+    int number = 0;
+    fseek(file, line->offset, SEEK_SET);
+    for (size_t i = 0; i < line->cnt_numbers; ++i) {
+        if (fread(&number, sizeof(int), 1, file) < 1) {
+            return BAD_FILE;
+        }
+        printf("%d ", number);
+    }
+    return OK;
 }
 
-void
-print_line(const Line* line) {
-    for (size_t i = 0; i < line->n; ++i) {
-        printf("%d ", *(line->arr + i));
+int
+read_line(Line* line, size_t* offset, FILE* file) {
+    size_t cnt_numbers = 0;
+    int number = 0;
+    printf("Количество чисел: ");
+    if (get_unsigned_int(&cnt_numbers) == EOF) {
+        return EOF;
     }
+    if (fwrite(&cnt_numbers, sizeof(size_t), 1, file) < 1) {
+        return BAD_FILE;
+    }
+    *(offset) += sizeof(size_t);
+    for (size_t i = 0; i < cnt_numbers; ++i) {
+        printf("Введите число: ");
+        if (get_signed_int(&number) == EOF) {
+            return EOF;
+        }
+        if (fwrite(&number, sizeof(int), 1, file) < 1) {
+            return BAD_FILE;
+        }
+    }
+    line->cnt_numbers = cnt_numbers;
+    line->offset = *offset;
+    *offset += cnt_numbers * sizeof(int);
+    return OK;
 }

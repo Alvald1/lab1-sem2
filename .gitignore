@@ -1,4 +1,6 @@
 bin*
 *plist
 *.swp
+.vscode
 test*
+*.bin

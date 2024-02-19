@@ -1,26 +1,42 @@
+#include <getopt.h>
 #include <stdio.h>
-
 #include "lib/code_status.h"
 #include "lib/matrix.h"
 #include "lib/task.h"
 
+int task(Matrix* matrix, Matrix* result);
+
 int
-main() {
+main(int argc, char* argv[]) {
     Matrix matrix, result;
-    switch (get_matrix(&matrix)) {
-        case BAD_ALLOC: printf("\nBAD_ALLOC"); return 0;
-        case EOF: return 0;
+    char flag = 0;
+    if (getopt(argc, argv, "f") == 'f') {
+        flag = FMODE_ON;
+    } else {
+        flag = FMODE_OFF;
     }
-    printf("\nИсходная матрица\n");
-    print_matrix(&matrix);
-    printf("\nРезультат\n");
-    if (task(&matrix, &result) == BAD_ALLOC) {
-        dealloc_matrix(&matrix, matrix.m);
-        printf("\nBAD_ALLOC");
+    switch (read_matrix(&matrix, flag)) {
+        case EOF: return 0;
+        case BAD_ALLOC: printf("\nBAD_ALLOC"); return 0;
+        case BAD_FILE: printf("\nBAD_FILE"); return 0;
+    }
+    if (print_matrix(&matrix) == BAD_FILE) {
+        printf("\nBAD_FILE");
+        dealloc_matrix(&matrix);
         return 0;
     }
-    print_matrix(&result);
-    dealloc_matrix(&matrix, matrix.m);
-    dealloc_matrix(&result, result.m);
+    switch (task(&matrix, &result)) {
+        case EOF: return 0;
+        case BAD_ALLOC: printf("\nBAD_ALLOC"); return 0;
+        case BAD_FILE: printf("\nBAD_FILE"); return 0;
+    }
+    if (print_matrix(&result) == BAD_FILE) {
+        printf("\nBAD_FILE");
+        dealloc_matrix(&matrix);
+        dealloc_matrix(&result);
+        return 0;
+    }
+    dealloc_matrix(&result);
+    dealloc_matrix(&matrix);
     return 0;
 }
