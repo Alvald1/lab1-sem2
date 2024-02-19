@@ -10,7 +10,7 @@ read_line_file(Line* line, size_t* offset, FILE* file) {
     *(offset) += sizeof(size_t);
     line->offset = *offset;
     *(offset) += (line->cnt_numbers) * sizeof(int);
-    fseek(file, *offset, SEEK_SET);
+    fseek(file, (line->cnt_numbers) * sizeof(int), SEEK_CUR);
     return OK;
 }
 

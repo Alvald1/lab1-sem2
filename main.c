@@ -81,12 +81,13 @@ task(Matrix* matrix, Matrix* result) {
     FILE *file_dest = NULL, *file_src = NULL;
     size_t offset = sizeof(size_t), max_ind = 0;
     switch (init_matrix(result, FMODE_RES, &file_dest)) {
-        case BAD_FILE: return BAD_FILE;
-        case EOF: return EOF;
+        case BAD_FILE: dealloc_matrix(matrix); return BAD_FILE;
+        case EOF: dealloc_matrix(matrix); return EOF;
     }
     result->cnt_lines = matrix->cnt_lines;
     Line* lines = (Line*)malloc(result->cnt_lines * sizeof(Line));
     if (lines == NULL) {
+        dealloc_matrix(matrix);
         free(result->file_name);
         return BAD_ALLOC;
     }

@@ -8,7 +8,6 @@
 int
 print_matrix(const Matrix* matrix) {
     FILE* file = fopen(matrix->file_name, "rb");
-    fseek(file, 0L, SEEK_SET);
     if (file == NULL) {
         return BAD_FILE;
     }
@@ -57,6 +56,8 @@ init_matrix(Matrix* matrix, char flag, FILE** file) {
     } else if (flag == FMODE_OFF) {
         printf("Количество строк: ");
         if (get_unsigned_int(&cnt_lines) == EOF) {
+            free(file_name);
+            fclose(*file);
             return EOF;
         }
         if (fwrite(&cnt_lines, sizeof(size_t), 1, *file) < 1) {
