@@ -4,8 +4,6 @@
 #include "lib/matrix.h"
 #include "lib/task.h"
 
-int task(Matrix* matrix, Matrix* result);
-
 int
 main(int argc, char* argv[]) {
     Matrix matrix, result;
