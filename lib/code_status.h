@@ -3,4 +3,6 @@
 
 enum { OK, BAD_ALLOC, BAD_FILE };
 
+enum { FMODE_ON, FMODE_OFF };
+
 #endif
