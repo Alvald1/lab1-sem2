@@ -53,7 +53,7 @@ main(int argc, char* argv[]) {
 
 int
 read_line_file(Line* line, size_t* offset, FILE* file) {
-    if (fread(&(line->cnt_numbers), sizeof(size_t), 1, file) < sizeof(size_t)) {
+    if (fread(&(line->cnt_numbers), sizeof(size_t), 1, file) < 1) {
         return BAD_FILE;
     }
     *(offset) += sizeof(size_t);
@@ -68,7 +68,7 @@ print_line(const Line* line, FILE* file) {
     int number = 0;
     fseek(file, line->offset, SEEK_SET);
     for (size_t i = 0; i < line->cnt_numbers; ++i) {
-        if (fread(&number, sizeof(int), 1, file) < sizeof(int)) {
+        if (fread(&number, sizeof(int), 1, file) < 1) {
             return BAD_FILE;
         }
         printf("%d ", number);
@@ -118,7 +118,7 @@ init_matrix(Matrix* matrix, char flag, FILE** file) {
         return BAD_FILE;
     }
     if (flag == FMODE_ON) {
-        if (fread(&cnt_lines, sizeof(size_t), 1, *file) < sizeof(size_t)) {
+        if (fread(&cnt_lines, sizeof(size_t), 1, *file) < 1) {
             free(file_name);
             fclose(*file);
             return BAD_FILE;
@@ -128,7 +128,7 @@ init_matrix(Matrix* matrix, char flag, FILE** file) {
         if (get_unsigned_int(&cnt_lines) == EOF) {
             return EOF;
         }
-        if (fwrite(&cnt_lines, sizeof(size_t), 1, *file) < sizeof(size_t)) {
+        if (fwrite(&cnt_lines, sizeof(size_t), 1, *file) < 1) {
             free(file_name);
             fclose(*file);
             return BAD_FILE;
@@ -154,7 +154,7 @@ read_line(Line* line, size_t* offset, FILE* file) {
     if (get_unsigned_int(&cnt_numbers) == EOF) {
         return EOF;
     }
-    if (fwrite(&cnt_numbers, sizeof(size_t), 1, file) < sizeof(size_t)) {
+    if (fwrite(&cnt_numbers, sizeof(size_t), 1, file) < 1) {
         return BAD_FILE;
     }
     *(offset) += sizeof(size_t);
@@ -163,7 +163,7 @@ read_line(Line* line, size_t* offset, FILE* file) {
         if (get_signed_int(&number) == EOF) {
             return EOF;
         }
-        if (fwrite(&number, sizeof(int), 1, file) < sizeof(int)) {
+        if (fwrite(&number, sizeof(int), 1, file) < 1) {
             return BAD_FILE;
         }
     }
@@ -176,7 +176,7 @@ read_line(Line* line, size_t* offset, FILE* file) {
 int
 read_matrix(Matrix* matrix, char flag) {
     size_t offset = sizeof(size_t);
-    fptr_read_line* fptr = NULL;
+    fptr_read_line fptr = NULL;
     FILE* file = NULL;
     switch (init_matrix(matrix, flag, &file)) {
         case BAD_ALLOC: return BAD_ALLOC;
