@@ -41,6 +41,8 @@ init_matrix(Matrix* matrix, char flag, FILE** file) {
         *file = fopen(file_name, "rb");
     } else if (flag == FMODE_OFF) {
         *file = fopen(file_name, "wb");
+    } else if (flag == FMODE_RES) {
+        *file = fopen(file_name, "wb");
     }
     if (*file == NULL) {
         free(file_name);
@@ -62,6 +64,9 @@ init_matrix(Matrix* matrix, char flag, FILE** file) {
             fclose(*file);
             return BAD_FILE;
         }
+    } else if (flag == FMODE_RES) {
+        matrix->file_name = file_name;
+        return OK;
     }
     Line* lines = (Line*)malloc(cnt_lines * sizeof(Line));
     if (lines == NULL) {
