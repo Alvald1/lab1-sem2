@@ -24,9 +24,15 @@ main(int argc, char* argv[]) {
         return 0;
     }
     switch (task(&matrix, &result)) {
-        case EOF: return 0;
-        case BAD_ALLOC: printf("\nBAD_ALLOC"); return 0;
-        case BAD_FILE: printf("\nBAD_FILE"); return 0;
+        case EOF: dealloc_matrix(&matrix); return 0;
+        case BAD_ALLOC:
+            dealloc_matrix(&matrix);
+            printf("\nBAD_ALLOC");
+            return 0;
+        case BAD_FILE:
+            dealloc_matrix(&matrix);
+            printf("\nBAD_FILE");
+            return 0;
     }
     if (print_matrix(&result) == BAD_FILE) {
         printf("\nBAD_FILE");

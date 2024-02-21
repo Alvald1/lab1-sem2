@@ -1,18 +1,53 @@
 #include "matrix.h"
 #include <readline/readline.h>
+#include <stdarg.h>
 #include <stdlib.h>
 #include "code_status.h"
 #include "get_number.h"
 #include "stdio.h"
 
+int init_matrix(Matrix* matrix, char flag, FILE** file, ...);
+
+char*
+get_file_name(const Matrix* matrix) {
+    return matrix->file_name;
+}
+
+size_t
+get_cnt_lines(const Matrix* matrix) {
+    return matrix->cnt_lines;
+}
+
+Line*
+get_lines(const Matrix* matrix) {
+    return matrix->lines;
+}
+
+void
+set_file_name(Matrix* matrix, char* file_name) {
+    matrix->file_name = file_name;
+}
+
+void
+set_cnt_lines(Matrix* matrix, size_t cnt_lines) {
+    matrix->cnt_lines = cnt_lines;
+}
+
+void
+set_lines(Matrix* matrix, Line* lines) {
+    matrix->lines = lines;
+}
+
 int
 print_matrix(const Matrix* matrix) {
-    FILE* file = fopen(matrix->file_name, "rb");
+    FILE* file = fopen(get_file_name(matrix), "rb");
+    size_t cnt_lines = get_cnt_lines(matrix);
+    Line* lines = get_lines(matrix);
     if (file == NULL) {
         return BAD_FILE;
     }
-    for (size_t i = 0; i < matrix->cnt_lines; ++i) {
-        if (print_line(matrix->lines + i, file) == BAD_FILE) {
+    for (size_t i = 0; i < cnt_lines; ++i) {
+        if (print_line(lines + i, file) == BAD_FILE) {
             fclose(file);
             return BAD_FILE;
         }
@@ -29,9 +64,21 @@ dealloc_matrix(const Matrix* matrix) {
 }
 
 int
-init_matrix(Matrix* matrix, char flag, FILE** file) {
+init_matrix_with_len(Matrix* matrix, char flag, FILE** file, size_t len) {
+    return init_matrix(matrix, flag, file, len);
+}
+
+int
+init_matrix_without_len(Matrix* matrix, char flag, FILE** file) {
+    return init_matrix(matrix, flag, file);
+}
+
+int
+init_matrix(Matrix* matrix, char flag, FILE** file, ...) {
     size_t cnt_lines = 0;
     *file = NULL;
+    va_list args;
+    va_start(args, file);
     char* file_name = readline("Название файла: ");
     if (file_name == NULL) {
         return EOF;
@@ -53,21 +100,23 @@ init_matrix(Matrix* matrix, char flag, FILE** file) {
             fclose(*file);
             return BAD_FILE;
         }
-    } else if (flag == FMODE_OFF) {
-        printf("Количество строк: ");
-        if (get_unsigned_int(&cnt_lines) == EOF) {
-            free(file_name);
-            fclose(*file);
-            return EOF;
+    } else {
+        if (flag == FMODE_OFF) {
+            printf("Количество строк: ");
+            if (get_unsigned_int(&cnt_lines) == EOF) {
+                free(file_name);
+                fclose(*file);
+                return EOF;
+            }
+        } else if (flag == FMODE_RES) {
+            cnt_lines = va_arg(args, size_t);
+            va_end(args);
         }
         if (fwrite(&cnt_lines, sizeof(size_t), 1, *file) < 1) {
             free(file_name);
             fclose(*file);
             return BAD_FILE;
         }
-    } else if (flag == FMODE_RES) {
-        matrix->file_name = file_name;
-        return OK;
     }
     Line* lines = (Line*)malloc(cnt_lines * sizeof(Line));
     if (lines == NULL) {
@@ -75,18 +124,20 @@ init_matrix(Matrix* matrix, char flag, FILE** file) {
         fclose(*file);
         return BAD_ALLOC;
     }
-    matrix->lines = lines;
-    matrix->cnt_lines = cnt_lines;
-    matrix->file_name = file_name;
+    set_cnt_lines(matrix, cnt_lines);
+    set_file_name(matrix, file_name);
+    set_lines(matrix, lines);
     return OK;
 }
 
 int
 read_matrix(Matrix* matrix, char flag) {
     size_t offset = sizeof(size_t);
+    size_t cnt_lines = 0;
     fptr_read_line fptr = NULL;
     FILE* file = NULL;
-    switch (init_matrix(matrix, flag, &file)) {
+    Line* lines = NULL;
+    switch (init_matrix_without_len(matrix, flag, &file)) {
         case BAD_ALLOC: return BAD_ALLOC;
         case BAD_FILE: return BAD_FILE;
         case EOF: return EOF;
@@ -96,8 +147,10 @@ read_matrix(Matrix* matrix, char flag) {
     } else if (flag == FMODE_ON) {
         fptr = read_line_file;
     }
-    for (size_t i = 0; i < matrix->cnt_lines; ++i) {
-        switch ((*fptr)(matrix->lines + i, &offset, file)) {
+    lines = get_lines(matrix);
+    cnt_lines = get_cnt_lines(matrix);
+    for (size_t i = 0; i < cnt_lines; ++i) {
+        switch ((*fptr)(lines + i, &offset, file)) {
             case EOF:
                 dealloc_matrix(matrix);
                 fclose(file);

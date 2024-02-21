@@ -5,10 +5,12 @@
 size_t
 find_max_ind(Line* line, FILE* file) {
     size_t max_ind = 0;
+    size_t offset = get_offset(line);
+    size_t cnt_numbers = get_cnt_numbers(line);
     int number = 0;
     int number_max = 0;
-    fseek(file, line->offset, SEEK_SET);
-    for (size_t i = 0; i < line->cnt_numbers; ++i) {
+    fseek(file, offset, SEEK_SET);
+    for (size_t i = 0; i < cnt_numbers; ++i) {
         if (fread(&number, sizeof(int), 1, file) < 1) {
             return BAD_FILE;
         }
@@ -39,52 +41,41 @@ memcopy(FILE* file_dest, FILE* file_src, size_t offset_dest, size_t offset_src, 
 int
 task(Matrix* matrix, Matrix* result) {
     FILE *file_dest = NULL, *file_src = NULL;
-    size_t offset = sizeof(size_t), max_ind = 0;
-    switch (init_matrix(result, FMODE_RES, &file_dest)) {
-        case BAD_FILE: dealloc_matrix(matrix); return BAD_FILE;
-        case EOF: dealloc_matrix(matrix); return EOF;
+    size_t offset_dest = sizeof(size_t), max_ind = 0;
+    size_t cnt_lines = get_cnt_lines(matrix);
+    char* file_name = get_file_name(matrix);
+    Line* lines_matrix = get_lines(matrix);
+    Line* lines_result = NULL;
+    switch (init_matrix_with_len(result, FMODE_RES, &file_dest, cnt_lines)) {
+        case BAD_FILE: return BAD_FILE;
+        case EOF: return EOF;
+        case BAD_ALLOC: return BAD_ALLOC;
     }
-    result->cnt_lines = matrix->cnt_lines;
-    Line* lines = (Line*)malloc(result->cnt_lines * sizeof(Line));
-    if (lines == NULL) {
-        dealloc_matrix(matrix);
-        free(result->file_name);
-        return BAD_ALLOC;
-    }
-    result->lines = lines;
-    if (fwrite(&(result->cnt_lines), sizeof(size_t), 1, file_dest) < 1) {
-        dealloc_matrix(matrix);
-        dealloc_matrix(result);
-        fclose(file_dest);
-        return BAD_FILE;
-    }
-    file_src = fopen(matrix->file_name, "rb");
+    file_src = fopen(file_name, "rb");
     if (file_src == NULL) {
-        dealloc_matrix(matrix);
         dealloc_matrix(result);
         fclose(file_dest);
         return BAD_FILE;
     }
-    for (size_t i = 0; i < result->cnt_lines; ++i) {
-        max_ind = 1 + find_max_ind(matrix->lines + i, file_src);
-        offset += sizeof(size_t);
+    lines_result = get_lines(result);
+    for (size_t i = 0; i < cnt_lines; ++i) {
+        max_ind = 1 + find_max_ind(lines_matrix + i, file_src);
+        offset_dest += sizeof(size_t);
         if (fwrite(&max_ind, sizeof(size_t), 1, file_dest) < 1) {
-            dealloc_matrix(matrix);
             dealloc_matrix(result);
             fclose(file_dest);
             fclose(file_src);
             return BAD_FILE;
         }
-        (result->lines + i)->offset = offset;
-        (result->lines + i)->cnt_numbers = max_ind;
-        if (memcopy(file_dest, file_src, offset, (matrix->lines + i)->offset, max_ind) == BAD_FILE) {
-            dealloc_matrix(matrix);
+        set_offset(lines_result + i, offset_dest);
+        set_cnt_numbers(lines_result + i, max_ind);
+        if (memcopy(file_dest, file_src, offset_dest, get_offset(lines_matrix + i), max_ind) == BAD_FILE) {
             dealloc_matrix(result);
             fclose(file_dest);
             fclose(file_src);
             return BAD_FILE;
         }
-        offset += max_ind * sizeof(int);
+        offset_dest += max_ind * sizeof(int);
     }
     fclose(file_dest);
     fclose(file_src);
