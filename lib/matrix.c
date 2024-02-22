@@ -78,7 +78,6 @@ init_matrix(Matrix* matrix, char flag, FILE** file, ...) {
     size_t cnt_lines = 0;
     *file = NULL;
     va_list args;
-    va_start(args, file);
     char* file_name = readline("Название файла: ");
     if (file_name == NULL) {
         return EOF;
@@ -109,6 +108,7 @@ init_matrix(Matrix* matrix, char flag, FILE** file, ...) {
                 return EOF;
             }
         } else if (flag == FMODE_RES) {
+            va_start(args, file);
             cnt_lines = va_arg(args, size_t);
             va_end(args);
         }

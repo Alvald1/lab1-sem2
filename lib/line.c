@@ -28,10 +28,10 @@ read_line_file(Line* line, size_t* offset, FILE* file) {
     if (fread(&cnt_numbers, sizeof(size_t), 1, file) < 1) {
         return BAD_FILE;
     }
-    *(offset) += sizeof(size_t);
+    *offset += sizeof(size_t);
     set_cnt_numbers(line, cnt_numbers);
     set_offset(line, *offset);
-    *(offset) += cnt_numbers * sizeof(int);
+    *offset += cnt_numbers * sizeof(int);
     fseek(file, cnt_numbers * sizeof(int), SEEK_CUR);
     return OK;
 }
@@ -61,7 +61,7 @@ read_line(Line* line, size_t* offset, FILE* file) {
     if (fwrite(&cnt_numbers, sizeof(size_t), 1, file) < 1) {
         return BAD_FILE;
     }
-    *(offset) += sizeof(size_t);
+    *offset += sizeof(size_t);
     for (size_t i = 0; i < cnt_numbers; ++i) {
         printf("Введите число: ");
         if (get_signed_int(&number) == EOF) {
